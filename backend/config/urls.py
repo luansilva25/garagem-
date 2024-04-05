@@ -20,7 +20,10 @@ from rest_framework.routers import DefaultRouter
 from garagem import views
 router = DefaultRouter()
 router.register(r'marcas', views.MarcaViewSet)
-
+router.register(r'cores', views.CorViewSet)
+router.register(r'acessorios', views.AcessorioViewSet)
+router.register(r'veiculos', views.VeiculoViewSet)
+router.register(r'categoria',views.CategoriaViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
