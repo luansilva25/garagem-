@@ -18,14 +18,23 @@ from django.contrib import admin
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from garagem import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from uploader.router import router as uploader_router
+from django.conf import settings 
+from django.conf.urls.static import static
+
 router = DefaultRouter()
 router.register(r'marcas', views.MarcaViewSet)
 router.register(r'cores', views.CorViewSet)
 router.register(r'acessorios', views.AcessorioViewSet)
 router.register(r'veiculos', views.VeiculoViewSet)
-router.register(r'categoria',views.CategoriaViewSet)
+router.register(r'categorias',views.CategoriaViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls))
+    path("token/", TokenObtainPairView.as_view(), name="token"),
+    path("refresh/", TokenRefreshView.as_view(), name=""),
+    path('', include(router.urls)),
+    path('image/', include(uploader_router.urls))
 ]
+urlpatterns += static(settings.MEDIA_ENDPOINT, document_root = settings.MEDIA_ROOT)

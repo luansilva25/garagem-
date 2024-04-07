@@ -1,7 +1,10 @@
 from django.db import models
 from garagem import models as itens
+from uploader.models.image import Image
 
 class Veiculo(models.Model):
+    foto = models.ForeignKey(Image, related_name='+', on_delete=models.PROTECT,default=None, blank=True, null=True)
+    nome = models.CharField(max_length=100, default=None)
     marca = models.ForeignKey(itens.Marca, on_delete=models.PROTECT, related_name="marca")
     categoria = models.ForeignKey(itens.Categoria, on_delete=models.PROTECT, related_name="categoria")
     cor = models.ForeignKey(itens.Cor, on_delete=models.PROTECT,related_name="cor")
