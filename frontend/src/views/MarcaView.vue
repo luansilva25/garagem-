@@ -72,6 +72,9 @@ watch(marcas, (marca) => {
 .lista {
   display: flex;
   flex-direction: column;
+  list-style: none;
+  gap: 20px;
+  font-size: 20px;
 }
 .container input {
   width: 300px;

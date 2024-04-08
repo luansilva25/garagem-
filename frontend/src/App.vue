@@ -1,6 +1,14 @@
 <script setup>
+  import { onMounted } from "vue";
   import cabecalho from "./components/cabecalho-component.vue"
   import rodapeComponent from "./components/rodape-component.vue";
+  import { logged } from "./pinia";
+  const store = logged()
+  
+  onMounted(() =>{
+      store.autologin()
+  })
+
 </script>
 <template>
   <div>

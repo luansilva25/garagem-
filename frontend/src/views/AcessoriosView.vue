@@ -6,6 +6,7 @@ import { onMounted, ref } from "vue";
     const novoacessorio = ref(null)
     const msg = ref(null)
     const errormsg = ref(null)
+    
     async function enviar(){
         if(novoacessorio.value){
             await api.CriarAcessorio(novoacessorio.value)
@@ -65,6 +66,9 @@ import { onMounted, ref } from "vue";
   .lista {
     display: flex;
     flex-direction: column;
+    list-style: none;
+    gap: 20px;
+    font-size: 20px;
   }
   .container input {
     width: 300px;

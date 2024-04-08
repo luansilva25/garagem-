@@ -81,6 +81,9 @@
   .categorias{
     display: flex;
     flex-direction: column;
+    list-style: none;
+    gap: 20px;
+    font-size: 20px;
   }
   .msg{
     background-color: rgb(1, 255, 141);
