@@ -3,5 +3,8 @@ from garagem.models import Acessorio
 from garagem.serializers import AcessorioSerializer
 
 class AcessorioViewSet(ModelViewSet):
-    queryset = Acessorio.objects.all()
+    def get_queryset(self):
+        if self.action == "get":
+            return Acessorio.objects.filter(usuario=self.request.user)
+        return Acessorio.objects.all()
     serializer_class = AcessorioSerializer

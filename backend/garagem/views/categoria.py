@@ -3,5 +3,8 @@ from garagem.models import Categoria
 from garagem.serializers import CategoriaSerializer
 
 class CategoriaViewSet(ModelViewSet):
-    queryset = Categoria.objects.all()
+    def get_queryset(self):
+        if self.action == "get":
+            return Categoria.objects.filter(usuario=self.request.user)
+        return Categoria.objects.all()
     serializer_class = CategoriaSerializer

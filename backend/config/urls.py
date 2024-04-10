@@ -29,12 +29,12 @@ from drf_spectacular.views import (
 )
 
 router = DefaultRouter()
-router.register(r'marcas', views.MarcaViewSet)
-router.register(r'cores', views.CorViewSet)
-router.register(r'acessorios', views.AcessorioViewSet)
+router.register(r'marcas', views.MarcaViewSet, basename="marcas")
+router.register(r'cores', views.CorViewSet, basename="Cores")
+router.register(r'acessorios', views.AcessorioViewSet, basename="Acessorios")
 router.register(r'veiculos', views.VeiculoViewSet, basename='veiculos')
-router.register(r'categorias',views.CategoriaViewSet)
-router.register(r'usuarios', views.UserViewSet)
+router.register(r'categorias',views.CategoriaViewSet, basename="Categorias")
+router.register(r'usuarios', views.UserViewSet, basename="usuario")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
