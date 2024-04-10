@@ -1,21 +1,41 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import CorAPI from '../api/cor'
+import { logged } from "@/pinia";
+import UserAPI from "@/api/usuario";
     const novacor = ref(null)
     const api = new CorAPI()
-    const cores = ref(null)
+    const cores = ref([])
     const msg = ref(null)
     const errormsg = ref(null)
+    const store = logged()
+    const usuarioapi = new UserAPI()
+    const userid = ref(null)
+
+    const isuserlogged = computed(() =>{
+        return store.showlog
+    })
+    
+    const usuario = computed(() =>{
+        return store.showuser
+    })
     
     async function enviar(){
         if(novacor.value){
-            await api.CriarCor(novacor.value)
+            await api.CriarCor(novacor.value, userid.value)
             msg.value = "cor enviada"
 
             setTimeout(() =>{
                 msg.value = null
                 location.reload()
             }, 2000)
+        }
+        else if(!isuserlogged.value){
+          errormsg.value = "logue-se para adicionar um cor"
+
+          setTimeout(() =>{
+                errormsg.value = null
+          }, 2000)
         }
         else{
             errormsg.value = 'preencha o campo corretamente'
@@ -37,6 +57,9 @@ import CorAPI from '../api/cor'
 
     onMounted(async() =>{
        cores.value = await api.ListarCores()
+       const apiusuario = await usuarioapi.ListarUsuarios()
+       const iduser = apiusuario.find(user => user.username === usuario.value)
+       userid.value = iduser.id
     })
 </script>
 <template>

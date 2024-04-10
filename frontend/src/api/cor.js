@@ -5,8 +5,8 @@ export default class CorAPI{
        const { data } =  await axios.get("http://127.0.0.1:8000/cores/")
        return data
     }
-    async CriarCor(cor){
-        const { data } = await axios.post("http://127.0.0.1:8000/cores/", { descricao: cor })
+    async CriarCor(cor, userid){
+        const { data } = await axios.post("http://127.0.0.1:8000/cores/", {usuario: userid,  descricao: cor })
         return data
     }
     async ExcluirCor(id){

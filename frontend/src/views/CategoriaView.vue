@@ -1,14 +1,30 @@
 <script setup>
-  import { onMounted, ref, watch } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
   import CategoriaAPI from '../api/categoria'
+import { logged } from '../pinia'
+import UserAPI from '@/api/usuario';
   const categoriaAPI = new CategoriaAPI()
   const novacategoria = ref(null)
-  const categorias = ref(null)
+  const categorias = ref([])
   const msg = ref(null)
   const msgerror = ref(null)
+  const store = logged()
+  const usuarioapi = new UserAPI()
+
+
+
+  const isuserlogged = computed(() =>{
+      return store.showlog
+  })
+  const usuario = computed(() =>{
+      return store.showuser
+  })
+
+  const userid = ref(null)
+
   async function enviar(){
     if(novacategoria.value){
-    await categoriaAPI.CriarCategoria(novacategoria.value)
+    await categoriaAPI.CriarCategoria(novacategoria.value, userid.value)
 
     msg.value = "categoria enviada com sucesso"
 
@@ -16,6 +32,13 @@
       msg.value = null
       location.reload()
     },2000)
+  }
+  else if(!isuserlogged.value){
+    msgerror.value = "logue-se para adicionar uma nova categoria"
+
+    setTimeout(() =>{
+      msgerror.value = null
+    }, 2000)
   }
   else {
     msgerror.value = "preencha o campo "
@@ -35,6 +58,9 @@
 
   onMounted(async () =>{
     categorias.value = await categoriaAPI.ListarCategoria()
+    const apiusuario = await usuarioapi.ListarUsuarios()
+    const iduser = apiusuario.find(user => user.username === usuario.value)
+    userid.value = iduser.id
   })
 
   watch(novacategoria, (categoria) =>{

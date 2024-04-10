@@ -1,20 +1,40 @@
 <script setup>
 import AcessorioAPI from "@/api/acessorios";
-import { onMounted, ref } from "vue";
+import UserAPI from "@/api/usuario";
+import { logged } from "@/pinia";
+import { computed, onMounted, ref } from "vue";
     const api = new AcessorioAPI()
-    const acessorios = ref(null)
+    const usuarioapi = new UserAPI()
+
+    const acessorios = ref([])
     const novoacessorio = ref(null)
     const msg = ref(null)
     const errormsg = ref(null)
+    const userid = ref(null)
+    const store = logged()
+
+    const isuserlogged = computed(() =>{
+        return store.showlog
+    })
+    const usuario = computed(() =>{
+        return store.showuser
+    })
     
     async function enviar(){
         if(novoacessorio.value){
-            await api.CriarAcessorio(novoacessorio.value)
+            await api.CriarAcessorio(novoacessorio.value, userid.value)
             msg.value = "acessorio enviado com sucesso"
 
             setTimeout(() =>{
                 msg.value = null
                 location.reload()
+            }, 2000)
+        }
+        else if(isuserlogged.value){
+            errormsg.value = "logue-se para adicionar novos acessorios"
+
+            setTimeout(() =>{
+                errormsg.value = null
             }, 2000)
         }
         else{
@@ -36,6 +56,9 @@ import { onMounted, ref } from "vue";
 
     onMounted( async () =>{
         acessorios.value = await api.ListarAcessorios()
+        const apiusuario = await usuarioapi.ListarUsuarios()
+        const iduser = apiusuario.find(user => user.username === usuario.value)
+        userid.value = iduser.id
     })
 </script>
 <template>

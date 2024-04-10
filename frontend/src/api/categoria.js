@@ -5,8 +5,8 @@ export default class CategoriaAPI{
         const { data } = await axios.get('http://127.0.0.1:8000/categorias/')
         return data
     }
-    async CriarCategoria(categoria){
-        const { data } = await axios.post('http://127.0.0.1:8000/categorias/', {nome: categoria})
+    async CriarCategoria(categoria, userid){
+        const { data } = await axios.post('http://127.0.0.1:8000/categorias/', {usuario:userid,  nome: categoria})
         return data
     }
     async ExcluirCategoria(id){

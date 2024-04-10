@@ -1,10 +1,13 @@
 <script setup>
 import VeiculoAPI from "@/api/veiculos";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { logged } from "@/pinia";
 const veiculosapi = new VeiculoAPI()
-
-const garagem = ref(null)
-
+const store = logged()
+const garagem = ref([])
+const isuserlogged = computed(() =>{
+  return store.showlog
+})
 onMounted(async () =>{
     garagem.value =  await veiculosapi.ListarVeiculos()
     console.log(garagem.value)
@@ -14,10 +17,15 @@ onMounted(async () =>{
 <template>
 <div class="container"> 
   <h1>Minha Garagem</h1>
-<div class="container-card">
+  <div v-if="!isuserlogged">
+      <h1>logue se para adicionar veiculos</h1>
+  </div>
+  <div v-else-if="logged && garagem.length === 0">
+      <h1>não há veiculos adicionados</h1>
+  </div>
+<div class="container-card" v-else>
   <div class="card" v-for="carros in garagem" :key="carros.id">
     <div id="image">
-      
     </div>
       <p id="titulo">{{carros.nome}}</p>
       <p>R$ {{carros.preco}}</p>

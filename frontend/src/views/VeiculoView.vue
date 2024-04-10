@@ -14,7 +14,7 @@ const Marcaapi = new MarcaAPI()
 const Acessorioapi = new AcessoriosAPI()
 const veiculosapi = new VeiculoAPI()
 const usuarioapi = new UserAPI()
-
+const router = useRouter()
 const store = logged()
 const cores = ref(null)
 const marcas = ref(null)
@@ -41,6 +41,10 @@ const categoriaid = ref(null)
 const marcaid = ref(null)
 const acessoriosids = ref(null)
 const userid = ref(null)
+
+const isuserlogged = computed(() =>{
+  return store.showlog
+})
 
 function alterarimagem(e){
   const target = e.target
@@ -80,7 +84,8 @@ watch(acessoriosselecionados, async (acessorio) =>{
 })
 
 async function NovoVeiculo(){
-  const veiculo = {
+  if(isuserlogged.value){
+    const veiculo = {
       usuario: userid.value,
       foto: image.car,
       nome: nome.value,
@@ -94,8 +99,9 @@ async function NovoVeiculo(){
   await veiculosapi.CriarVeiculo(veiculo)
   alert('veiculo criado')
   setTimeout(() =>{
-    useRouter().push('/')
-  }, 1000)
+    router.push('/')
+  }, 500)
+  }
 }
 
 

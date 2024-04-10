@@ -29,10 +29,12 @@
     </ul>
 </template>
 <script setup>
-    import { computed } from 'vue'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { logged } from '../pinia/index'
-    const store = logged()
 
+    const store = logged()
+    const router = useRouter()
     const isuserlog = computed(() =>{
         return store.showlog
     })
@@ -41,6 +43,12 @@ import { logged } from '../pinia/index'
     })
     function logout(){
         store.logout()
+
+        setTimeout(() =>{
+            alert('deslogado do sistema')
+            location.reload()
+            router.push('/')
+        }, 2000)
     }
 </script>
 <style scoped>

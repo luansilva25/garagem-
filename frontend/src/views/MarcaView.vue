@@ -1,24 +1,46 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import MarcaAPI from '../api/marca'
+import { logged } from '@/pinia';
+import UserAPI from '@/api/usuario';
 
 const api = new MarcaAPI()
+const usuarioapi = new UserAPI()
+
+const userid = ref(null)
+
 const novamarca = ref(null)
-const marcas = ref(null)
+const marcas = ref([])
 const nacionalidade = ref(null)
 const msg = ref(null)
 const errormsg = ref(null)
+const store = logged()
+
+const isuserlogged = computed(() =>{
+  return store.showlog
+})
+const usuario = computed(() =>{
+  return store.showuser
+})
 
 async function enviar() {
-  if (marcas.value && nacionalidade.value) {
-    await api.NovaMarca(novamarca.value, nacionalidade.value)
+  if (marcas.value && nacionalidade.value && userid.value) {
+    await api.NovaMarca(novamarca.value, nacionalidade.value, userid.value)
     msg.value = 'marca enviada com sucesso'
 
     setTimeout(() => {
       msg.value = null
       location.reload()
     }, 2000)
-  } else {
+  } 
+  else if(!isuserlogged.value){
+    errormsg.value = "logue-se para adicionar uma marca"
+
+    setTimeout(() =>{
+        errormsg.value = null
+    }, 2000)
+  }
+  else {
     errormsg.value = "preencha os campos corretamente"
 
     setTimeout(() =>{
@@ -37,6 +59,9 @@ async function excluir(id){
 
 onMounted(async () => {
   marcas.value = await api.ListarMarcas()
+  const apiusuario = await usuarioapi.ListarUsuarios()
+  const iduser = apiusuario.find(user => user.username === usuario.value)
+  userid.value = iduser.id
 })
 
 watch(marcas, (marca) => {
